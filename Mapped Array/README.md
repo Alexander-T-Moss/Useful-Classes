@@ -1,3 +1,7 @@
+Class Description
+--
+This is just a glorification on C# 2D arrays to make them more useful
+
 Where do I find what I want?
 --
 The code you probably want is in `main.cs`
