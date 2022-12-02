@@ -5,16 +5,25 @@ The code you probably want is in `main.cs`
 Or.... you can copy the relevant code from below
 
 ```
+using System;
+using System.IO;
+
 class MappedArray
 {
-  string[,] ArrayGrid; // Initialize 2D Array
-  
+   // Initialize 2D Array
+  string[,] ArrayGrid; 
+  int MappedArrayWidth, MappedArrayDepth;
+   
   public MappedArray(string[] input)
   {
-    // Set dimensions of array (X)
-    ArrayGrid = new string[input[0].Length, input.Length];
+     // Set dimensions of array
+    MappedArrayWidth = input[0].Length;
+    MappedArrayDepth = input.Length;
 
-    // Assign values from input to respective places in 2D array
+     // Initalize array
+    ArrayGrid = new string[MappedArrayWidth, MappedArrayDepth];
+
+     // Assign values from input to respective places in 2D array
     int arrayX, arrayY = 0;
     foreach (string line in input)
     {
@@ -22,22 +31,75 @@ class MappedArray
       foreach(char element in line.Trim())
       {
         ArrayGrid[arrayX, arrayY] = element.ToString();
-        arrayX++;
+        arrayX++; 
       }
-      arrayY++;
+      arrayY++; 
     }
   }
 
-  // Return element at given X,Y index
-  public string GetElementAt (int xCoord, int yCoord)
+   // Return element at given X,Y index
+  public string GetElementAt (int arrayX, int arrayY)
   {
-      return ArrayGrid[xCoord, yCoord];
+      return ArrayGrid[arrayX, arrayY];
   }
     
-  // Change element at given X,Y index
-  public void SetElementAt (int xCoord, int yCoord, string newElement)
+   // Change element at given X,Y index
+  public void SetElementAt (int arrayX, int arrayY, string newElement)
   {
-      ArrayGrid[xCoord, yCoord] = newElement;
+      ArrayGrid[arrayX, arrayY] = newElement;
+  }
+
+  public string[] GetColumn(int arrayX)
+  {
+     // Create array to pull data to from 2D array
+    string[] column = new string[MappedArrayDepth];
+
+     // Pull data to array
+    for(int arrayY = 0; arrayY < MappedArrayDepth; arrayY++)
+    {
+      column[arrayY] = ArrayGrid[arrayX, arrayY];
+    }
+    
+    return column;
+  }
+
+  public string[] GetRow(int arrayY)
+  {
+     // Create array to pull data to from 2D array
+    string[] row = new string[MappedArrayDepth];
+
+     // Pull data to arrray
+    for(int arrayX = 0; arrayX < MappedArrayDepth; arrayX++)
+    {
+      row[arrayX] = ArrayGrid[arrayX, arrayY];
+    }
+    
+    return row;
+  }
+}
+
+class Program {
+  public static void Main (string[] args) {
+    
+     // Read Input.txt file to array
+    string[] InputArray = File.ReadAllLines(@"Input.txt");
+    
+     // Initialize test MappedArray
+    MappedArray myMappedArray = new(InputArray);
+
+     // Get element from MappedArray
+    Console.WriteLine("\nElement at X:4 Y:1 is " + myMappedArray.GetElementAt(4,1));
+
+     // Change element in MappedArray
+    Console.WriteLine("\nChanging element at X:4 Y:1 to 6");
+    myMappedArray.SetElementAt(4,1, "6");
+    Console.WriteLine("\nElement at X:4 Y:1 is " + myMappedArray.GetElementAt(4,1));
+
+     // Barf contents of column to console
+    Console.WriteLine("\nColumn 3: " + string.Join(", ", myMappedArray.GetColumn(3)));
+
+     // Barf contents of row to console
+    Console.WriteLine("\nRow 5: " + string.Join(", ", myMappedArray.GetRow(5)));
   }
 }
 ```
